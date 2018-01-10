@@ -19,13 +19,19 @@ function alpha_spectrumanalysis(files,foi,smth)
 % - Fieldtrip (http://www.fieldtriptoolbox.org/start)
 % - SPM12 (http://www.fil.ion.ucl.ac.uk/spm/software/spm12/)
 %
-% NOTES: 
-% Smoothing depends on the expected size of the spatio-spectral
-% effect, which cannot be known a priori. Litvak et al recommend to try
-% smoothing with different kernels (doi:10.1155/2011/852961). We include
-% the smoothing option for 
+% NOTES:
+% Smoothing is beneficial to accommodate intersubject differences in
+% functional anatomy / dynamics and to render the data more Gaussian, if
+% one wants to use Random Field Theory. However, the dimensions of the
+% smoothing kernel depend on the expected size of the effect
+% (matched-filter theorm), which cannot be known a priori. Litvak et al
+% recommend to try smoothing with different kernels
+% (doi:10.1155/2011/852961), but we are rather averse to too many
+% researchers degrees of freedom. Also, because we use permutation
+% statistics, smoothing is not strictly necessary (although it might help
+% increasing  SNR).
 %
-%??????????????????????????????????????????????????????????????????????????
+%--------------------------------------------------------------------------
 % (c) Eugenio Abela, RichardsonLab, www.epilepsy-london.org
 
 %% Select files to analyse
