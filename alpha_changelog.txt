@@ -1,0 +1,19 @@
+alpha_changelog
+2018-02-13
+Added
+alpha_convert2spm.m
+alpha_jaccard.m
+alpha_spectrumplot.m
+
+2018-01-10
+
+Edited spm_eeg_convert2images.m on line 113
+
+Original: 
+V     = [136 172]/n;% voxel size 
+
+New:
+V     = [136 136]/n;% voxel size 
+
+Purpose:
+Wanted to have isotropic voxel sizes in space (e.g. square EEG topoplots, as conventionally seen in the literature). This is aesthetics, but still...
