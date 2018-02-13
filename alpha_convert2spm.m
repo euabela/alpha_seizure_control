@@ -1,6 +1,25 @@
 function alpha_convert2spm
 % Converts Fieldtrip structures to SPM MEEG object and scalp x frequency
 % images
+%
+% PURPOSE: 
+% This script contains routines to transform FT data to SPM12 scalp x freq
+% images.
+%
+% INPUTS: 
+%  - None, run  as is
+% 
+% OUTPUTS:
+% - EEG scalp x frequency-images
+%
+% DEPENDECIES: 
+% - Fieldtrip (http://www.fieldtriptoolbox.org/start)
+% - SPM12 (http://www.fil.ion.ucl.ac.uk/spm/software/spm12/)
+%
+% NOTES:
+% Pro memoria: need to epoch before image conversion.
+%--------------------------------------------------------------------------
+% (c) Eugenio Abela, RichardsonLab, www.epilepsy-london.org
 %% Define files
 %==========================================================================
 data2convert = spm_select(Inf,'^nrm');
