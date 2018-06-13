@@ -1,5 +1,25 @@
 %% alpha_spectrumplot
 % This script is used to generate Fig. 1
+%
+% PURPOSE: 
+% This script prints subplots A-C of Fig. 1 on our forthcoming paper
+% (CITATION HERE ONCE PUBLISHED).
+%
+% INPUTS: 
+% - Power spectrum data files in Fieldtrip format.
+%
+% OUTPUTS:
+% - Matlab figure with three subplots
+%
+% DEPENDECIES: 
+% - Gramm by Pierre Morel (https://github.com/piermorel/gramm)
+%
+% NOTES: 
+%
+%
+%--------------------------------------------------------------------------
+% (c) Eugenio Abela, RichardsonLab, www.epilepsy-london.org
+%
 %% Load data
 %==========================================================================
 
@@ -14,11 +34,13 @@ ige = spm_select(Inf,'^nrm_fteeg.*\.mat','Select IGE...');
 foc = spm_select(Inf,'^nrm_fteeg.*\.mat','Select FE...');
 
 % Patients by seizure control
-gsz = spm_select(Inf,'^nrm_fteeg.*\.mat','Select GSZ...');
-psz = spm_select(Inf,'^nrm_fteeg.*\.mat','Select PSZ...');
+gsz = spm_select(Inf,'^nrm_fteeg.*\.mat','Select GSC...');
+psz = spm_select(Inf,'^nrm_fteeg.*\.mat','Select PSC...');
 
 % Organise data structures
 %--------------------------------------------------------------------------
+% Note: this section of code basically repackages everything into three
+% data structures. This simplifies passing data to gramm for plotting.
 
 % Epilepsy data strucutre
 epifiles = char(con,ige,foc);
@@ -53,7 +75,7 @@ for subi = 1:size(szrfiles,1)
     szr.freq        = nrm.freq;
 end
 
-%% Variables (Currently not used)
+%% Additional variables (Currently not used, kept for future reference)
 %==========================================================================
 
 % General
@@ -89,11 +111,8 @@ f = figure('Units', 'centimeters','Position',[15 15 15 5]);
 %--------------------------------------------------------------------------
 cmap = brewermap(3,'Set1');
 
-% GRAMM code
-%--------------------------------------------------------------------------
-% This is unwieldy, but currently no time to streamline it...
-
 % First subplot
+%--------------------------------------------------------------------------
 g(1,1) = gramm('x',epi.freq,'y',epi.nrm,'color',epi.idx);
 g(1,1).stat_summary('type','bootci','geom',{'area'},'setylim','true');
 g(1,1).set_stat_options('nboot',5000);
@@ -112,6 +131,7 @@ g(1,1).set_text_options('base_size',12,'font','Arial');
 g(1,1).no_legend();
 
 % Second subplot
+%--------------------------------------------------------------------------
 g(1,2) = gramm('x',szr.freq,'y',szr.nrm,'color',szr.idx);
 g(1,2).stat_summary('type','bootci','geom',{'area'},'setylim','true');
 g(1,2).set_stat_options('nboot',5000);
@@ -130,6 +150,7 @@ g(1,2).set_text_options('base_size',12,'font','Arial');
 g(1,2).no_legend();
 
 % Third subplot
+%--------------------------------------------------------------------------
 g(1,3) = gramm('x',syn.freq,'y',syn.nrm,'color',syn.idx);
 g(1,3).stat_summary('type','bootci','geom',{'area'},'setylim','true');
 g(1,3).set_stat_options('nboot',5000);
@@ -148,9 +169,11 @@ g(1,3).set_text_options('base_size',12,'font','Arial');
 g(1,3).no_legend();
 
 % Now draw
+%--------------------------------------------------------------------------
 draw(g); 
 
 % Customise axes
+%--------------------------------------------------------------------------
 for ii = 1:3
     ax = g(1,ii).facet_axes_handles;
     alpha_offsetAxes(ax,100);
@@ -164,6 +187,5 @@ for ii = 1:3
         set(ax,'YLabel',[],'YTickLabel',{});
     end
 end
-
-
-
+%--------------------------------------------------------------------------
+%% END
