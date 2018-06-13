@@ -5,7 +5,8 @@ function [jaccardIndex, ci, p] = alpha_jaccard(im1, im2)
 % This script calculates the Jaccard similarity index (Jaccard index for
 % short), i.e. the intersecton divided by the union of two sets, and uses
 % bootstrapping to find its confidence interval and permutations to assess
-% its significance.
+% its significance. It works for images in Nifti format (.nii), e.g. EEG 
+% topographies or brain images.
 %
 % INPUTS: 
 % - im1, im2        Two binarised image files (nifti format)
@@ -19,7 +20,7 @@ function [jaccardIndex, ci, p] = alpha_jaccard(im1, im2)
 % - Matlab statistics toolbox (for bootci.m)
 %
 % NOTES: 
-% On theoretical grounds, the Jaccard distane (1-Jaccard index)
+% On theoretical grounds, the Jaccard distance (1-Jaccard index)
 % might be preferrable, see Levandowsky, Winter, Nature 1971 (doi:
 % 10.1038/234034a0). 
 %
@@ -74,4 +75,5 @@ end
 % not many, the actual Jaccard is unusual -> low p-value!
 p = sum(jaccardIndex_perm>jaccardIndex)/nperms;
 
+%--------------------------------------------------------------------------
 %% End
