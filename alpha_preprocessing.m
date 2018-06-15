@@ -6,8 +6,8 @@ function eeg = alpha_preprocessing(datafiles,labelfile,outdir)
 %
 % INPUTS: 
 % - data2prepro     File list of data to preprocess (subjects x characters)
-% - labefile        File (.mat) containing a cell of channel label strings
-%                   (in one column, i.e. channels x 1) in your data
+% - labelfile        File (.mat) containing a cell of channel label strings
+%                   (in one column, i.e. channels x 1) 
 % - outputdir       Output directory
 %
 % OUTPUTS:
@@ -30,7 +30,7 @@ function eeg = alpha_preprocessing(datafiles,labelfile,outdir)
 %==========================================================================
 
 if nargin<1
-    
+
     % Select data
     %----------------------------------------------------------------------
     datafiles = spm_select(Inf,'.edf$','Select data to preprocess...');
@@ -42,6 +42,7 @@ if nargin<1
     % Select output directory
     %----------------------------------------------------------------------
     outdir    = spm_select(1,'dir','Select output directory...');
+    
 end
 
 %% Preprocessing loop
@@ -61,7 +62,7 @@ for filenum = 1:size(datafiles,1);
     cfg.continuous  = 'yes';
     
     % Remove all posible inconsistent channels found in our data set (this
-    % list was laborioulsy compiled by us manually for the data at hand).
+    % list was compiled by us manually).
     %----------------------------------------------------------------------
     
     cfg.channel     = {'all','-EEG A*','-EEG S*',...
