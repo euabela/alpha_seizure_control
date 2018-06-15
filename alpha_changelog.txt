@@ -1,12 +1,18 @@
 alpha_changelog
+2081-06-15
+Added:
+alpha_offsetAxes
+alpha_spectrumplot
+
+This are routines necessary for to plot the first figure of the upcoming paper.
+
 2018-02-13
-Added
+Added:
 alpha_convert2spm.m
 alpha_jaccard.m
 alpha_spectrumplot.m
 
 2018-01-10
-
 Edited spm_eeg_convert2images.m on line 113
 
 Original: 
