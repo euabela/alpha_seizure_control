@@ -20,9 +20,10 @@ function alpha_convert2spm
 % Pro memoria: need to epoch before image conversion.
 %--------------------------------------------------------------------------
 % (c) Eugenio Abela, RichardsonLab, www.epilepsy-london.org
+
 %% Define files
 %==========================================================================
-data2convert = spm_select(Inf,'^nrm');
+data2convert = spm_select(Inf,'^nrm'); % Your preferred prefix here
 
 %% Loop over files
 %==========================================================================
