@@ -1,12 +1,27 @@
 %% alpha_toposhift_image
+
 %% Load images
+%=========================================================================
 dataDir  = spm_select(1,'dir','Select data directory...');
 imgFiles = spm_select('FPListRec',dataDir,'^condition.*\.nii$');
 outNam = 'shift';
 
 %% Loop over files
+%=========================================================================
+% Start SPM
+%-------------------------------------------------------------------------
+spm('defaults','eeg');
+
+% Initialise SPM job manager
+%-------------------------------------------------------------------------
 spm_jobman('initcfg');
+
+% Initialise waitbar
+%-------------------------------------------------------------------------
 h = waitbar(0,'Please wait...');
+
+% Loop
+%-------------------------------------------------------------------------
 for imgi = 1:size(imgFiles,1)
     [pth ,nam, ext] = spm_fileparts(imgFiles(imgi,:));
     outNam = ['shift_' nam ext];
@@ -30,4 +45,10 @@ for imgi = 1:size(imgFiles,1)
     spm_jobman('run',matlabbatch);
     waitbar(imgi/size(imgFiles,1));
 end
+
+%  Close waitbar
+%-------------------------------------------------------------------------
 close(h);
+
+%=========================================================================
+%End
