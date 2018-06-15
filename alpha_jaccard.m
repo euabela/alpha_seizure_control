@@ -3,7 +3,7 @@ function [jaccardIndex, ci, p] = alpha_jaccard(im1, im2)
 %
 % PURPOSE: 
 % This script calculates the Jaccard similarity index (Jaccard index for
-% short), i.e. the intersecton divided by the union of two sets, and uses
+% short), i.e. the intersection divided by the union of two sets, and uses
 % bootstrapping to find its confidence interval and permutations to assess
 % its significance. It works for images in Nifti format (.nii), e.g. EEG 
 % topographies or brain images.
@@ -75,5 +75,5 @@ end
 % not many, the actual Jaccard is unusual -> low p-value!
 p = sum(jaccardIndex_perm>jaccardIndex)/nperms;
 
-%--------------------------------------------------------------------------
+%==========================================================================
 %% End
