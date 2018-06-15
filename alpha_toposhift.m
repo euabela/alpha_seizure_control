@@ -1,6 +1,7 @@
 %% alpha_toposhift
+
 %% Preliminaries
-%--------------------------------------------------------------------------
+%==========================================================================
 % Select data
 %--------------------------------------------------------------------------
 files = spm_select(Inf,'^nrm.*\.mat$','Select power files...');
@@ -15,11 +16,11 @@ topo.filename = cell(nsub,1);
 topo.lopwr    = zeros(nsub,nchan);
 topo.hipwr    = zeros(nsub,nchan);
 topo.shift    = zeros(nsub,nchan);
-% alpha.mxpwr    = zeros(size(pwrnorm,1),1);
+% alpha.mxpwr   = zeros(size(pwrnorm,1),1);
 % topo.iaf      = zeros(nsub,nchan);
 
 %% Loop over subjects
-%--------------------------------------------------------------------------
+%==========================================================================
 
 for subi = 1:nsub
    
@@ -34,7 +35,7 @@ for subi = 1:nsub
     [~,nam,~] = spm_fileparts(files(subi,:));
     topo.filename{subi,1} = nam;
     
-    % No loop over channels
+    % Now loop over channels
     %----------------------------------------------------------------------
     for chani = 1:nchan
           
@@ -52,10 +53,13 @@ for subi = 1:nsub
         %------------------------------------------------------------------
         topo.shift(subi,chani) = topo.lopwr(subi,chani)./topo.hipwr(subi,chani);
 
-        % IAF (currently unused)
+        % IAF 
         %------------------------------------------------------------------
-%         fullalphaRange = dsearchn(freq',(6:.1:13)');
-%         maxPwr = max(pwr(:,fullalphaRange));
-%         topo.iaf(subi,1) = freq(dsearchn(avgPwr',maxPwr));
+        fullalphaRange = dsearchn(freq',(6:.1:13)');
+        maxPwr = max(pwr(:,fullalphaRange));
+        topo.iaf(subi,1) = freq(dsearchn(avgPwr',maxPwr));
     end
 end
+
+%==========================================================================
+%% END
