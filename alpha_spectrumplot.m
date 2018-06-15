@@ -1,191 +1,245 @@
-%% alpha_spectrumplot
-% This script is used to generate Fig. 1
-%
-% PURPOSE: 
-% This script prints subplots A-C of Fig. 1 on our forthcoming paper
-% (CITATION HERE ONCE PUBLISHED).
-%
-% INPUTS: 
-% - Power spectrum data files in Fieldtrip format.
-%
-% OUTPUTS:
-% - Matlab figure with three subplots
-%
-% DEPENDECIES: 
-% - Gramm by Pierre Morel (https://github.com/piermorel/gramm)
-%
-% NOTES: 
-%
-%
-%--------------------------------------------------------------------------
-% (c) Eugenio Abela, RichardsonLab, www.epilepsy-london.org
-%
-%% Load data
+% alpha_spectrumplot
+
+%% 1-Load data
+%==========================================================================
+clearvars;
+load('dataFig1');
+
+
+%% 2-Plots
 %==========================================================================
 
-% Define filenames
-%--------------------------------------------------------------------------
-
-% Healthy controls
-con = spm_select(Inf,'^nrm_fteeg.*\.mat','Select controls...');
-
-% Patients by syndromes
-ige = spm_select(Inf,'^nrm_fteeg.*\.mat','Select IGE...');
-foc = spm_select(Inf,'^nrm_fteeg.*\.mat','Select FE...');
-
-% Patients by seizure control
-gsz = spm_select(Inf,'^nrm_fteeg.*\.mat','Select GSC...');
-psz = spm_select(Inf,'^nrm_fteeg.*\.mat','Select PSC...');
-
-% Organise data structures
-%--------------------------------------------------------------------------
-% Note: this section of code basically repackages everything into three
-% data structures. This simplifies passing data to gramm for plotting.
-
-% Epilepsy data strucutre
-epifiles = char(con,ige,foc);
-epi = struct; 
-epi.idx = [zeros(size(con,1),1); ones((size(ige,1)+size(foc,1)),1)];
-
-for subi = 1:size(epifiles,1)
-    load(deblank(epifiles(subi,:)));
-    epi.nrm(subi,:) = mean(nrm.powspctrm,1);
-    epi.freq        = nrm.freq;
-end
-
-% Syndrome data structure
-synfiles = char(ige,foc);
-syn = struct;
-syn.idx = [zeros(size(ige,1),1);ones(size(foc,1),1)];
-
-for subi = 1:size(synfiles,1)
-    load(deblank(epifiles(subi,:)));
-    syn.nrm(subi,:) = mean(nrm.powspctrm,1);
-    syn.freq        = nrm.freq;
-end
-
-% Seizure data structure
-szrfiles = char(gsz,psz);
-szr = struct;
-szr.idx = [ones(size(gsz,1),1); ones(size(psz,1),1)+1];
-
-for subi = 1:size(szrfiles,1)
-    load(deblank(synfiles(subi,:)));
-    szr.nrm(subi,:) = mean(nrm.powspctrm,1);
-    szr.freq        = nrm.freq;
-end
-
-%% Additional variables (Currently not used, kept for future reference)
-%==========================================================================
-
-% General
-% x  = syn.freq; % x axis
-% y  = syn.nrm;  % y axis
-% id = syn.idx;  % color coding - according to groups
-
-% Spectrum peaks...
-% ... for controls
-% pwrCon     = syn.nrm(syn.idx == 0,:);
-% [~,c]      = find(mean(pwrCon(:,5:14)) == max(mean(pwrCon(:,5:14))));
-% maxfreqCon = syn.freq(4+c);
-% 
-% % ... for IGE
-% pwrIGE     = syn.nrm(syn.idx == 1,:);
-% [~,c]      = find(mean(pwrIGE(:,5:14)) == max(mean(pwrIGE(:,5:14))));
-% maxfreqIGE = syn.freq(4+c);
-% 
-% % ... for focal
-% pwrFOC     = syn.nrm(syn.idx == 2,:);
-% [~,c]      = find(mean(pwrFOC(:,5:14)) == max(mean(pwrFOC(:,5:14))));
-% maxfreqFOC = syn.freq(4+c);
-
-%% Plots
-%==========================================================================
-
-% Define figure 
+% 2.1-Set up figure 
 %--------------------------------------------------------------------------
 close all;
-f = figure('Units', 'centimeters','Position',[15 15 15 5]);
-
-% Define colormap
+f = figure('Units', 'centimeters','Position',[20 50 15 8]);
+font = 11;
+% 2.2-Define colormap
 %--------------------------------------------------------------------------
-cmap = brewermap(3,'Set1');
+if ~exist('cmap','var')
+    cmap = brewermap(3,'Set1');
+end
 
-% First subplot
+% 2.3-Set up data, axes, and positions
 %--------------------------------------------------------------------------
+
+% Panel A
 g(1,1) = gramm('x',epi.freq,'y',epi.nrm,'color',epi.idx);
-g(1,1).stat_summary('type','bootci','geom',{'area'},'setylim','true');
-g(1,1).set_stat_options('nboot',5000);
-g(1,1).set_color_options('map',cmap);
-g(1,1).set_order_options('color',[2 1]);
-g(1,1).set_line_options('base_size',2,'styles',{'-','-.',':'});
-g(1,1).axe_property('TickDir','out','LineWidth',1,...
-    'YLim',[0.005 0.20],'YTick',[0.01,0.2],'YTickLabel',...
-    {'0.01','0.22'},...
-    'XLim',[1.5 20],'XTick',[2,6,7,8,11,17,20],'XTickLabel',...
-    {'2','6',[],'8','11','17','20'},...
-    'TickLength',[0.01 0.025]);
-g(1,1).set_layout_options('margin_height',[0.2 0.1],'margin_width',...
-    [0.2 0.05],'redraw',false);
-g(1,1).set_text_options('base_size',12,'font','Arial');
-g(1,1).no_legend();
+g(1,1).axe_property('TickDir','out','LineWidth',.5,...
+    'YLim',[0 0.20],'YTick',[0.01,0.2],'YTickLabel',{'0.01','0.20'},...
+    'XLim',[1 20],'XTick',[2,6,7,8,11,20],...
+    'XTickLabel', {'2','6','7','8','11','20'},...
+    'TickLength',[0.025 0.025]);
+g(1,1).set_layout_options('margin_height',[0.45 0.1],'margin_width',...
+    [0.20 0.00],'redraw',false);
 
-% Second subplot
-%--------------------------------------------------------------------------
+% Panel B
 g(1,2) = gramm('x',szr.freq,'y',szr.nrm,'color',szr.idx);
-g(1,2).stat_summary('type','bootci','geom',{'area'},'setylim','true');
-g(1,2).set_stat_options('nboot',5000);
-g(1,2).set_color_options('map',cmap);
-g(1,2).set_order_options('color',[2 1]);
-g(1,2).set_line_options('base_size',2,'styles',{'-','-.',':'});
-g(1,2).axe_property('TickDir','out','LineWidth',1,...
-    'YLim',[0.005 0.20],'YTick',[0.01,0.2],'YTickLabel',...
-    {'0.01','0.22'},...
-    'XLim',[1.5 20],'XTick',[2,7,8,10,11,20],'XTickLabel',...
-    {'2','7','8',[],'11','20'},...
-    'TickLength',[0.01 0.025]);
-g(1,2).set_layout_options('margin_height',[0.2 0.1],'margin_width',...
-    [0.05 0.1],'redraw',false);
-g(1,2).set_text_options('base_size',12,'font','Arial');
-g(1,2).no_legend();
+g(1,2).axe_property('TickDir','out','LineWidth',.5,...
+    'YLim',[0 0.20],'YTick',[0.01,0.2],'YTickLabel',{},...
+    'XLim',[1 20],'XTick',[2,7,8,11,20],...
+    'XTickLabel', {'2','7','8','11','20'},...
+    'XLabel',[],'TickLength',[0.025 0.025]);
+g(1,2).set_layout_options('margin_height',[0.45 0.1],'margin_width',...
+    [0.15 0.05],'redraw',false);
 
-% Third subplot
-%--------------------------------------------------------------------------
+% Panel C
 g(1,3) = gramm('x',syn.freq,'y',syn.nrm,'color',syn.idx);
-g(1,3).stat_summary('type','bootci','geom',{'area'},'setylim','true');
-g(1,3).set_stat_options('nboot',5000);
-g(1,3).set_color_options('map',cmap);
-g(1,3).set_order_options('color',[2 1]);
-g(1,3).set_line_options('base_size',2,'styles',{'-','-.',':'});
-g(1,3).axe_property('TickDir','out','LineWidth',1,...
-    'YLim',[0.005 0.20],'YTick',[0.01,0.2],'YTickLabel',...
-    {'0.01','0.22'},...
-    'XLim',[1.5 20],'XTick',[2,10,20],'XTickLabel',...
-    {'2','10','20'},...
-    'TickLength',[0.01 0.025]);
-g(1,3).set_layout_options('margin_height',[0.2 0.1],'margin_width',...
-    [0.05 0.1],'redraw',false);
-g(1,3).set_text_options('base_size',12,'font','Arial');
-g(1,3).no_legend();
+g(1,3).axe_property('TickDir','out','LineWidth',.5,...
+    'YLim',[0 0.20],'YTick',[0.01,0.2],'YTickLabel',{},...
+    'XLim',[1 20],'XTick',[2,7,10,11,20],...
+    'XTickLabel', {'2','7','10  ','  11','20'},...
+    'XLabel',[],'TickLength',[0.025 0.025]);
+g(1,3).set_layout_options('margin_height',[0.45 0.1],'margin_width',...
+    [0.10 0.1],'redraw',false);
 
-% Now draw
-%--------------------------------------------------------------------------
-draw(g); 
-
-% Customise axes
+% 2.4-Set common options for all subplots
 %--------------------------------------------------------------------------
 for ii = 1:3
-    ax = g(1,ii).facet_axes_handles;
-    alpha_offsetAxes(ax,100);
-    if ii ==1
-        xlabel(ax,'Frequency (Hz)','Position',[11 -0.03 -1],...
-        'FontSize',12,'FontName','Arial');
-        ylabel(ax,'Power (norm.)','Position',[0.1, 0.11 -1],...
-        'FontSize',12,'FontName','Arial');
+    g(1,ii).stat_summary('type','bootci','geom',{'area'},'setylim','true');
+    g(1,ii).set_stat_options('nboot',5000);
+    g(1,ii).set_color_options('map',cmap);
+    g(1,ii).set_order_options('color',[2 1]);
+    g(1,ii).set_line_options('base_size',1,'styles',{'-','-.',':'});
+    g(1,ii).set_text_options('base_size',8.5,'font','Arial');
+    g(1,ii).no_legend();
+    if ii == 1
+      g(1,ii).set_names('x','Frequency (Hz)','y',...
+          ['Power' char(10) '(normalised)']);
     else
-        xlabel(ax,''); 
-        set(ax,'YLabel',[],'YTickLabel',{});
+      g(1,ii).set_names('y',[]);
     end
 end
+
+% 2.5-Draw and customise axes
 %--------------------------------------------------------------------------
-%% END
+g.draw();
+
+for ii = 1:3
+    ax = g(1,ii).facet_axes_handles;
+    alpha_offsetAxes(ax,50);
+    if ii == 1
+        ax.YLabel.Position = [0.2 0.105 -1]; % Move y-label closer to axis
+%       ax.XLabel.Position = [18 -0.03 -1];  % Move x-label out of the way
+        ax.XLabel.HorizontalAlignment = 'center';
+    end
+end
+
+% 2.6-Mark non-overlapping frequencies
+% --------------------------------------------------------------------------
+
+% Panel A
+ax11 = g(1,1).facet_axes_handles;
+line(ax11,[6 8],[0 0],'Color','k','LineWidth',2);
+line(ax11,[10.9 11.1],[0 0],'Color','k','LineWidth',2);
+
+% Panel B
+ax12 = g(1,2).facet_axes_handles;
+line(ax12,[7 8],[0 0],'Color','k','LineWidth',2);
+line(ax12,[10.9 11.1],[0 0],'Color','k','LineWidth',2);
+
+% Panel C
+ax13 = g(1,3).facet_axes_handles;
+line(ax13,[6.9 7.1],[0 0],'Color','k','LineWidth',2);
+line(ax13,[10 11],[0 0],'Color','k','LineWidth',2);
+  
+
+% Annotations Panel A
+text(ax11,0,.23,'A','FontSize',font,'FontWeight','Bold');
+text(ax11,4,.135,'Patients','FontSize',font*.7);
+text(ax11,11,.155,['Healthy' char(10) 'controls'],'FontSize',font*.7);
+
+% text(ax11,14.5,.04,['Group spectra' char(10) '[\mu\pm95%CI]'],'FontSize',font*.5);
+% text(ax11,2,.015,['Peak \alpha-freq.' char(10) '[mdn\pmIQR]'],'FontSize',font*.5,...
+%     'HorizontalAlignment','left');
+
+% Annotations Panel B
+text(ax12,0,.23,'B','FontSize',font,'FontWeight','Bold');
+text(ax12,5.5,.155,['Poor' char(10) 'sz. control'],'FontSize',font*.7,...
+    'HorizontalAlignment','center');
+text(ax12,13.5,.17,['Good' char(10) 'sz. control'],'FontSize',font*.7,...
+    'HorizontalAlignment','center');
+
+% Annotations Panel C
+text(ax13,0,.23,'C','FontSize',font,'FontWeight','Bold');
+text(ax13,5.5,.15,['Focal' char(10) 'epilepsy'],'FontSize',font*.7,...
+    'HorizontalAlignment','center');
+text(ax13,16.2,.17,['Idiopathic' char(10) 'generalised epilepsy'],...
+    'FontSize',font*.7,'HorizontalAlignment','center');
+
+
+% 2.7-Show and save (optional)
+%--------------------------------------------------------------------------
+f.Visible = 'on';
+
+% export_fig alpha_spectra_v3.png -png -r300
+% [I,map] = imread('alpha_spectra_v3.png','png');
+% figure; imshow(I,map);
+
+%% End
+
+%% Zombie code (not dead, yet not alive either)
+% if strcmp(iaf,'mdn') == 1;
+%    
+%   % Healthy subjects
+%     line(ax11,[prctile(epi.confreq,25) prctile(epi.confreq,75)],[0.02 0.02],...
+%         'Color',cmap(2,:),'LineWidth',1.5);
+%     plot(ax11,median(epi.confreq),0.02,'o','MarkerFaceColor',cmap(2,:),...
+%         'MarkerEdgeColor','w','MarkerSize',5)
+% 
+%     % Epilepsy patients
+%     line(ax11,[prctile(epi.patfreq,25) prctile(epi.patfreq,75)],[0.01 0.01],...
+%         'Color',cmap(1,:),'LineWidth',1.5);
+%     plot(ax11,median(epi.patfreq),0.01,'o','MarkerFaceColor',cmap(1,:),...
+%         'MarkerEdgeColor','w','MarkerSize',5)
+%  
+% 
+%     % GSC
+%     line(ax12,[prctile(szr.gszfreq,25) prctile(szr.gszfreq,75)],[0.02 0.02],...
+%         'Color',cmap(2,:),'LineWidth',1.5);
+%     plot(ax12,median(szr.gszfreq),0.02,'o','MarkerFaceColor',cmap(2,:),...
+%         'MarkerEdgeColor','w','MarkerSize',5)
+%     
+%     % PSC
+%     line(ax12,[prctile(szr.pszfreq,25) prctile(szr.pszfreq,75)],[0.01 0.01],...
+%         'Color',cmap(1,:),'LineWidth',1.5);
+%     plot(ax12,median(szr.pszfreq),0.01,'o','MarkerFaceColor',cmap(1,:),...
+%         'MarkerEdgeColor','w','MarkerSize',5)
+%     
+%     
+%     % IGE
+%     line(ax13,[prctile(syn.igefreq,25) prctile(syn.igefreq,75)],[0.02 0.02],...
+%         'Color',cmap(2,:),'LineWidth',1.5);
+%     plot(ax13,median(syn.igefreq),0.02,'o','MarkerFaceColor',cmap(2,:),...
+%         'MarkerEdgeColor','w','MarkerSize',5)
+%     
+%     % FE
+%     line(ax13,[prctile(syn.focfreq,25) prctile(syn.focfreq,75)],[0.01 0.01],...
+%         'Color',cmap(1,:),'LineWidth',1.5);
+%     plot(ax13,median(syn.focfreq),0.01,'o','MarkerFaceColor',cmap(1,:),...
+%         'MarkerEdgeColor','w','MarkerSize',5)
+%     
+% elseif strcmp(iaf,'dots') == 1;
+%     
+%     % Parameters
+%     alpha = 0.3;
+%     scale = 6;
+%     jitter = 0.2;
+%     font  = 11;
+% 
+%     % Panel A
+%     ax11 = g(1,1).facet_axes_handles;
+%     % Healthy subjects
+%     y = ones(1,length(epi.confreq))/60;
+%     s = ones(1,length(epi.confreq))*scale;
+%     scatter(ax11,epi.confreq,y,s,'o','MarkerFaceColor',cmap(2,:),...
+%         'MarkerEdgeColor',cmap(2,:),...
+%         'MarkerEdgeAlpha',0,'MarkerFaceAlpha',alpha,...
+%         'jitter','on','jitterAmount',jitter);
+% 
+%     % Epilepsy patients
+%     y = ones(1,length(epi.patfreq))/100;
+%     s = ones(1,length(epi.patfreq))*scale;
+%     scatter(ax11,epi.patfreq,y,s,'o','MarkerFaceColor',cmap(1,:),...
+%         'MarkerEdgeColor',cmap(1,:),...
+%         'MarkerEdgeAlpha',0,'MarkerFaceAlpha',alpha,...
+%         'jitter','on','jitterAmount',jitter);
+% 
+%  
+%     % Panel B
+%     ax12 = g(1,2).facet_axes_handles;
+%     % GSC patients
+%     y = ones(1,length(szr.gszfreq))/60;
+%     s = ones(1,length(szr.gszfreq))*scale;
+%     scatter(ax12,szr.gszfreq,y,s,'o','MarkerFaceColor',cmap(2,:),...
+%         'MarkerEdgeColor',cmap(2,:),...
+%         'MarkerEdgeAlpha',0,'MarkerFaceAlpha',alpha,...
+%         'jitter','on','jitterAmount',jitter);
+% 
+%     % PSC patients
+%     y = ones(1,length(szr.pszfreq))/100;
+%     s = ones(1,length(szr.pszfreq))*scale;
+%     scatter(ax12,szr.pszfreq,y,s,'o','MarkerFaceColor',cmap(1,:),...
+%         'MarkerEdgeColor',cmap(1,:),...
+%         'MarkerEdgeAlpha',0,'MarkerFaceAlpha',alpha,...
+%         'jitter','on','jitterAmount',jitter);
+% 
+%  
+%     % Panel C
+%     ax13 = g(1,3).facet_axes_handles;
+%     % IGE patients
+%     y = ones(1,length(syn.igefreq))/60;
+%     s = ones(1,length(syn.igefreq))*scale;
+%     scatter(ax13,syn.igefreq,y,s,'o','MarkerFaceColor',cmap(2,:),...
+%         'MarkerEdgeColor',cmap(2,:),...
+%         'MarkerEdgeAlpha',0,'MarkerFaceAlpha',alpha,...
+%         'jitter','on','jitterAmount',jitter);
+% 
+%     % Focal patients
+%     y = ones(1,length(syn.focfreq))/100;
+%     s = ones(1,length(syn.focfreq))*scale;
+%     scatter(ax13,syn.focfreq,y,s,'o','MarkerFaceColor',cmap(1,:),...
+%         'MarkerEdgeColor',cmap(1,:),...
+%         'MarkerEdgeAlpha',0,'MarkerFaceAlpha',alpha,...
+%         'jitter','on','jitterAmount',jitter);   
+% end
