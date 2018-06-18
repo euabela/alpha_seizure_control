@@ -3,6 +3,8 @@
 % DEPENDENCIES:
 % - brewermap (https://github.com/DrosteEffect/BrewerMap)
 % - gramm (https://github.com/piermorel/gramm)
+% - export_fig (https://github.com/altmany/export_fig)
+%
 
 %% 1-Load data
 %==========================================================================
@@ -136,9 +138,11 @@ text(ax13,16.2,.17,['Idiopathic' char(10) 'generalised epilepsy'],...
 %--------------------------------------------------------------------------
 f.Visible = 'on';
 
+% Uncomment this if you want to save, reimport and visualise % figure.
 % export_fig alpha_spectra_v3.png -png -r300
 % [I,map] = imread('alpha_spectra_v3.png','png');
 % figure; imshow(I,map);
+
 
 %% End
 
