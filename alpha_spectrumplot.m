@@ -1,9 +1,13 @@
 % alpha_spectrumplot
+%
+% DEPENDENCIES:
+% - brewermap (https://github.com/DrosteEffect/BrewerMap)
+% - gramm (https://github.com/piermorel/gramm)
 
 %% 1-Load data
 %==========================================================================
 clearvars;
-load('dataFig1');
+load('2018-03-07_alpha_spectrumplot.mat');
 
 
 %% 2-Plots
