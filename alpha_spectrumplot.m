@@ -1,6 +1,7 @@
 % alpha_spectrumplot
 %
 % DEPENDENCIES:
+% - alpha_offsetAxes (see this repository)
 % - brewermap (https://github.com/DrosteEffect/BrewerMap)
 % - gramm (https://github.com/piermorel/gramm)
 % - export_fig (https://github.com/altmany/export_fig)
