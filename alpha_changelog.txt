@@ -1,5 +1,11 @@
 alpha_changelog
-2081-06-15
+2018-10-05
+Added:
+alpha_img2maps_edit
+
+This rountine contains tweaks necessary to generate the topographic plots in the paper.
+
+2018-06-15
 Added:
 alpha_offsetAxes
 alpha_spectrumplot
